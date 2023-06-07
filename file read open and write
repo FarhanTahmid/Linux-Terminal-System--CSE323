@@ -1,0 +1,58 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+
+int main() {
+    std::cout << "Welcome to Linux Terminal System." << std::endl;
+    std::cout << "Enter Command :" << std::endl;
+
+    std::string command;
+    std::string filename;
+    std::string content;
+
+    while (true) {
+        std::getline(std::cin, command);
+
+        if (command.substr(0, 4) == "cat ") {
+            filename = command.substr(4);
+            std::ifstream file(filename);
+            std::string line;
+
+            if (file.is_open()) {
+                while (getline(file, line)) {
+                    std::cout << line << std::endl;
+                }
+                file.close();
+            }
+            else {
+                std::cout << "File does not exist" << std::endl;
+            }
+        }
+        else if (command.substr(0, 6) == "gedit ") {
+            filename = command.substr(6);
+            std::string notepadCommand = "\"C:\\Program Files\\Notepad++\\notepad++.exe\" " + filename;//while doing in linux terminal replace the path with nano.
+            std::system(notepadCommand.c_str());
+        }
+
+
+        else if (command.substr(0, 6) == "echo \"") {
+            std::size_t pos = command.find("\" > ");
+            if (pos != std::string::npos) {
+                content = command.substr(6, pos - 6);
+                filename = command.substr(pos + 4);
+                std::ofstream file(filename, std::ios::app); 
+                file << content << std::endl;
+                file.close();
+            }
+            else {
+                std::cout << "Invalid command format" << std::endl;
+            }
+        }
+        else {
+            std::cout << "Invalid command" << std::endl;
+        }
+    }
+
+    return 0;
+}
